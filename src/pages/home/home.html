@@ -8,6 +8,18 @@
 </ion-header>
 
 <ion-content padding>
-  <p>I want to put the last classes student attendance here</p>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col class="vertical-line" col-sm-6>
+        <sign-in-form *ngIf="student == null" (signIn)="signIn($event)"></sign-in-form>
+        <signed-in *ngIf="student !== null" [student]="student" [todaysClasses]="todaysClasses" (signOut)="signOut()"></signed-in>
+      </ion-col>
+      <ion-col col-sm-6>
+        <attendance></attendance>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
   <p>{{environment}}</p>
 </ion-content>

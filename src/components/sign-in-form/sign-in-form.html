@@ -1,0 +1,21 @@
+<!-- Generated template for the SignInFormComponent component -->
+<h3>Sign In</h3>
+<error-message></error-message>
+<ion-spinner *ngIf="loading" name="bubbles"></ion-spinner>
+
+<div *ngIf="!loading">
+  <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+    <ion-list>
+      <ion-item>
+        <ion-label stacked>Student Number</ion-label>
+        <ion-input formControlName="studentNumber" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked>Pin Number</ion-label>
+        <ion-input type="password" formControlName="pinNumber"></ion-input>
+      </ion-item>
+    </ion-list>
+    <button type="submit" ion-button block [disabled]="signInForm.invalid">Sign In</button>
+  </form>
+</div>

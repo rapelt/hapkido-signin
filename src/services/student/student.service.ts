@@ -7,6 +7,7 @@ import * as _ from "underscore";
 @Injectable()
 export class StudentService {
   private students: Student[] = [];
+  private student: Student;
 
   constructor(private studentData: StudentData, private studentEvents: StudentEvents) {}
 
@@ -24,7 +25,12 @@ export class StudentService {
   }
 
   getStudent(hbid: string){
-    //this.recipes[index] = recipe;
+    this.studentData.getStudent(hbid).subscribe((student: Student) => {
+      this.student = student;
+      this.studentEvents.studentUpdated.next(this.student);
+    }, (error) => {
+      console.log(error);
+    });
   }
 
   getStudentsActiveState(studentList){

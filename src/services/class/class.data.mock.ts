@@ -21,6 +21,10 @@ export class ClassDataMock {
     return Observable.of(ClassDataMock.classes);
   }
 
+  getTodaysClasses(): Observable<Class []> {
+    return Observable.of(ClassDataMock.classes);
+  }
+
   addStudentToClass(studentId: string, classId: string){
     return Observable.of(ClassDataMock.classes[0]);
   }

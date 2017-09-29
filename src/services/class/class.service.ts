@@ -1,22 +1,31 @@
-import {Student} from "../../models/student";
-import {Injectable} from "@angular/core";
-import {Class} from "../../models/class";
-import {Moment} from "moment";
+import {Student} from '../../models/student';
+import {Injectable, Inject} from '@angular/core';
+import {Class} from '../../models/class';
+import {Moment} from 'moment';
 import * as moment from 'moment';
-import {ClassData} from "./class.data";
-import {ClassEvents} from "./class.events";
+import {ClassData} from './class.data';
+import {ClassEvents} from './class.events';
+import {EnvVariables} from '../../app/enviroment/enviroment.token';
+import * as _ from 'underscore';
 
 @Injectable()
 export class ClassService {
   private classes: Class[] = [];
+  private todaysClasses: Class[] = [];
 
-  constructor(private classData: ClassData, private classEvents: ClassEvents) {}
+  constructor(private classData: ClassData, private classEvents: ClassEvents, @Inject(EnvVariables) public envVariables) {
+    this.repeat();
+  }
 
   createClass(){
   }
 
   setClasses(classes) {
     this.classes = classes;
+  }
+
+  setTodaysClasses(classes) {
+    this.todaysClasses = classes;
   }
 
   getAllClasses(){
@@ -32,6 +41,18 @@ export class ClassService {
   }
 
   getClass(){
+  }
+
+  getTodaysClasses(){
+    this.classData.getTodaysClasses().subscribe((todaysClasses: Class []) => {
+      todaysClasses.forEach((aclass)=>{
+        aclass.date = moment(aclass.date);
+      });
+      this.setTodaysClasses(this.sortClasses(todaysClasses));
+      this.classEvents.todaysClassesUpdated.next(this.todaysClasses);
+    }, (error) => {
+      console.log(error);
+    });
   }
 
   updateClass() {
@@ -73,17 +94,6 @@ export class ClassService {
     return dates;
   }
 
-  getClassesOnDay(selectedValue: Date, classes: Array<Class>) {
-    let day = moment(selectedValue);
-    let classesOnADay: Array<Class> = [];
-
-    classes.forEach((aclass) => {
-      if(moment(day).isSame(aclass.date, 'day')){
-        classesOnADay.push(aclass);
-      }
-    });
-    return classesOnADay;
-  }
 
   addStudent(studentId: string, classId: string){
     this.classData.addStudentToClass(studentId, classId).subscribe(response => {
@@ -100,4 +110,11 @@ export class ClassService {
       console.log(error);
     });
   }
+
+  repeat(){
+    setInterval(() =>{
+      this.getTodaysClasses();
+    }, this.envVariables.getClassTime);
+  }
+
 }

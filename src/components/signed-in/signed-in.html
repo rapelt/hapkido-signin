@@ -1,0 +1,28 @@
+<!-- Generated template for the SignedInComponent component -->
+<error-message></error-message>
+
+<div align-self-center>
+  <h3>Hello {{student.name.firstname}}, what class are you attending today?</h3>
+</div>
+<div class="classAttended" [formGroup]="signedInForm">
+
+  <form [formGroup]="signedInForm" (ngSubmit)="onSubmit()">
+      <div class="class-container" formArrayName="classes">
+        <span *ngFor="let aclass of signedInForm.controls.classes.controls; let i=index">
+          <div [formGroupName]="i">
+            <label [for]="'classclick' + i" [ngClass]="{'item-checkbox-checked': signedInForm.controls.classes.controls[i].controls.attended.value}" class="class-item">
+              <span class="type"> {{todaysClasses[i].classType}} </span><br/><span class="time">{{todaysClasses[i].date.format('h:mm a')}}</span></label>
+            <input [id]="'classclick' + i" type="checkbox" formControlName="attended" color="dark" checked="false" (click)="onButtonClick(i, aclass)">
+          </div>
+        </span>
+      </div>
+  </form>
+</div>
+
+
+
+
+<button type="button" ion-button block (click)="onSignOut()">Sign Out</button>
+
+
+
